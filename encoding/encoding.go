@@ -1,7 +1,12 @@
 package encoding
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
+
 	"github.com/Yandex-Practicum/final-project-encoding-go/models"
+	"gopkg.in/yaml.v3"
 )
 
 // JSONData тип для перекодирования из JSON в YAML
@@ -25,16 +30,72 @@ type MyEncoder interface {
 
 // Encoding перекодирует файл из JSON в YAML
 func (j *JSONData) Encoding() error {
-	// ниже реализуйте метод
-	// ...
+	jsonFile, err := os.ReadFile(j.FileInput)
+	if err != nil {
+		fmt.Printf("ошибка при чтении файла: %s", err.Error())
+		return err
+	}
 
+	var data JSONData
+	err = json.Unmarshal(jsonFile, &data)
+	if err != nil {
+		fmt.Printf("ошибка при десериализации из json: %s", err.Error())
+		return err
+	}
+
+	yamlData, err := yaml.Marshal(&data)
+	if err != nil {
+		fmt.Printf("ошибка при сериализации в yaml: %s", err.Error())
+		return err
+	}
+
+	file, err := os.Create(j.FileOutput)
+	if err != nil {
+		fmt.Printf("ошибка при создании файла: %s", err.Error())
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(yamlData)
+	if err != nil {
+		fmt.Printf("ошибка при записи данных в файл: %s", err.Error())
+		return err
+	}
 	return nil
 }
 
 // Encoding перекодирует файл из YAML в JSON
 func (y *YAMLData) Encoding() error {
-	// Ниже реализуйте метод
-	// ...
+	yamlFile, err := os.ReadFile(y.FileInput)
+	if err != nil {
+		fmt.Printf("ошибка при чтении файла: %s", err.Error())
+		return err
+	}
 
+	var data YAMLData
+	err = yaml.Unmarshal(yamlFile, &data)
+	if err != nil {
+		fmt.Printf("ошибка при десериализации из yaml: %s", err.Error())
+		return err
+	}
+
+	jsonData, err := json.Marshal(&data)
+	if err != nil {
+		fmt.Printf("ошибка при сериализации в json: %s", err.Error())
+		return err
+	}
+
+	file, err := os.Create(y.FileOutput)
+	if err != nil {
+		fmt.Printf("ошибка при создании файла: %s", err.Error())
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(jsonData)
+	if err != nil {
+		fmt.Printf("ошибка при записи данных в файл: %s", err.Error())
+		return err
+	}
 	return nil
 }
