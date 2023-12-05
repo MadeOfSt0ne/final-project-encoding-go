@@ -36,7 +36,7 @@ func (j *JSONData) Encoding() error {
 		return err
 	}
 
-	var data JSONData
+	var data models.DockerCompose
 	err = json.Unmarshal(jsonFile, &data)
 	if err != nil {
 		fmt.Printf("ошибка при десериализации из json: %s", err.Error())
@@ -72,7 +72,7 @@ func (y *YAMLData) Encoding() error {
 		return err
 	}
 
-	var data YAMLData
+	var data models.DockerCompose
 	err = yaml.Unmarshal(yamlFile, &data)
 	if err != nil {
 		fmt.Printf("ошибка при десериализации из yaml: %s", err.Error())
